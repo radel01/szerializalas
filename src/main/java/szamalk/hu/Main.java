@@ -4,10 +4,7 @@ import szamalk.hu.modell.Haromszog;
 import szamalk.hu.modell.NemSzerkeszthetoExeption;
 
 import javax.swing.*;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 public class Main {
 
@@ -18,7 +15,8 @@ public class Main {
     public Main() {
         //hasznalat();
         //egyenloseg();
-        szerializalas();
+        //szerializalas();
+        deSzerializalas();
     }
 
     private void szerializalas() {
@@ -49,7 +47,41 @@ public class Main {
         }
     }
 
-    private void egyenloseg() {
+    private void deSzerializalas() {
+        try (ObjectInputStream objBe = new ObjectInputStream(new FileInputStream("egyHaromszog.ser"))) {
+            Object h = objBe.readObject();
+            System.out.println("A beolvasott háromszög állapota: " + h);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (ObjectInputStream objBe = new ObjectInputStream(new FileInputStream("masodikHaromszog.bin"))) {
+            Haromszog h1 =(Haromszog) objBe.readObject();
+            System.out.println("A beolvasott háromszög állapota: " + h1);
+            Haromszog h2 =(Haromszog) objBe.readObject();
+            System.out.println("A 2. beolvasott háromszög állapota: " + h2);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (ObjectInputStream objBe = new ObjectInputStream(new FileInputStream("tombkHaromszog.dat"))) {
+            Haromszog[] haromszogek =(Haromszog[]) objBe.readObject();
+            System.out.println("A beolvasott háromszögek állapota: " );
+            for(Haromszog haromszog: haromszogek){
+                System.out.println(haromszog);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+        private void egyenloseg() {
         Haromszog h1= new Haromszog();
         System.out.println("h1: "+h1);
         System.out.println("h1 hashcode: "+h1.hashCode());
